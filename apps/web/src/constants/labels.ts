@@ -64,7 +64,7 @@ export const labels = {
     createUser: "Criar usuário",
   },
   dashboard: {
-    welcomeTitle: "Bem-vindo ao ERP",
+    welcomeTitle: "Bem-vindo ao ERP Dev",
     welcomeLead:
       "Use o menu lateral para acessar fornecedores, produtos, colaboradores, financeiro e serviços. Todas as operações são protegidas por autenticação e persistidas no PostgreSQL.",
   },
