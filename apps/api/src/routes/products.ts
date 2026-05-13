@@ -28,7 +28,7 @@ router.post("/", async (req, res) => {
   try {
     const created = await prisma.product.create({ data: parsed.data });
     res.status(201).json(created);
-  } catch (e) {
+  } catch {
     res.status(400).json({ message: "Não foi possível criar o produto (SKU duplicado?)" });
   }
 });

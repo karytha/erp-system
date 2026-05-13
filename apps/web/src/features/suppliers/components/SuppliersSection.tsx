@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { labels } from "@/constants";
 import {
   createSupplier,
   deleteSupplier,
@@ -52,11 +53,11 @@ export function SuppliersSection() {
 
   return (
     <div>
-      <PageTitle>Fornecedores</PageTitle>
-      <PageSubtitle>Cadastre e mantenha seus fornecedores.</PageSubtitle>
+      <PageTitle>{labels.suppliers.pageTitle}</PageTitle>
+      <PageSubtitle>{labels.suppliers.pageSubtitle}</PageSubtitle>
 
       <Panel>
-        <PanelTitle>Novo fornecedor</PanelTitle>
+        <PanelTitle>{labels.suppliers.newPanel}</PanelTitle>
         {(createMut.isError || deleteMut.isError) && (
           <ErrorBanner>
             {(createMut.error as Error)?.message ?? (deleteMut.error as Error)?.message}
@@ -64,18 +65,21 @@ export function SuppliersSection() {
         )}
         <FormGrid>
           <Label>
-            Nome
-            <TextInput value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            {labels.common.name}
+            <TextInput
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
           </Label>
           <Label>
-            Documento
+            {labels.common.document}
             <TextInput
               value={form.document ?? ""}
               onChange={(e) => setForm({ ...form, document: e.target.value })}
             />
           </Label>
           <Label>
-            E-mail
+            {labels.common.email}
             <TextInput
               type="email"
               value={form.email ?? ""}
@@ -83,7 +87,7 @@ export function SuppliersSection() {
             />
           </Label>
           <Label>
-            Telefone
+            {labels.common.phone}
             <TextInput
               value={form.phone ?? ""}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
@@ -94,22 +98,22 @@ export function SuppliersSection() {
             disabled={!form.name || createMut.isPending}
             onClick={() => createMut.mutate()}
           >
-            Adicionar
+            {labels.common.add}
           </SmallButton>
         </FormGrid>
       </Panel>
 
       <Panel>
-        <PanelTitle>Lista</PanelTitle>
-        {list.isLoading && <PageSubtitle>Carregando…</PageSubtitle>}
+        <PanelTitle>{labels.common.list}</PanelTitle>
+        {list.isLoading && <PageSubtitle>{labels.common.loading}</PageSubtitle>}
         {list.isError && <ErrorBanner>{(list.error as Error).message}</ErrorBanner>}
         <TableWrap>
           <Table>
             <thead>
               <tr>
-                <Th>Nome</Th>
-                <Th>Documento</Th>
-                <Th>Contato</Th>
+                <Th>{labels.common.name}</Th>
+                <Th>{labels.common.document}</Th>
+                <Th>{labels.common.contact}</Th>
                 <Th />
               </tr>
             </thead>
@@ -117,13 +121,14 @@ export function SuppliersSection() {
               {list.data?.map((s) => (
                 <tr key={s.id}>
                   <Td>{s.name}</Td>
-                  <Td>{s.document ?? "—"}</Td>
+                  <Td>{s.document ?? labels.common.emDash}</Td>
                   <Td>
-                    {s.email ?? "—"} {s.phone ? `· ${s.phone}` : ""}
+                    {s.email ?? labels.common.emDash}
+                    {s.phone ? `${labels.common.contactSeparator}${s.phone}` : ""}
                   </Td>
                   <Td style={{ textAlign: "right" }}>
                     <DangerButton type="button" onClick={() => deleteMut.mutate(s.id)}>
-                      Excluir
+                      {labels.common.delete}
                     </DangerButton>
                   </Td>
                 </tr>

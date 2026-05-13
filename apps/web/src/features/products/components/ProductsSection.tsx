@@ -2,8 +2,15 @@
 
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { labels } from "@/constants";
+import { formatBRL } from "@/lib/format";
 import { fetchSuppliers } from "@/features/suppliers/api/suppliers-api";
-import { createProduct, deleteProduct, fetchProducts, type ProductInput } from "../api/products-api";
+import {
+  createProduct,
+  deleteProduct,
+  fetchProducts,
+  type ProductInput,
+} from "../api/products-api";
 import {
   PageTitle,
   PageSubtitle,
@@ -50,11 +57,11 @@ export function ProductsSection() {
 
   return (
     <div>
-      <PageTitle>Produtos</PageTitle>
-      <PageSubtitle>Controle de catálogo e estoque.</PageSubtitle>
+      <PageTitle>{labels.products.pageTitle}</PageTitle>
+      <PageSubtitle>{labels.products.pageSubtitle}</PageSubtitle>
 
       <Panel>
-        <PanelTitle>Novo produto</PanelTitle>
+        <PanelTitle>{labels.products.newPanel}</PanelTitle>
         {(createMut.isError || deleteMut.isError) && (
           <ErrorBanner>
             {(createMut.error as Error)?.message ?? (deleteMut.error as Error)?.message}
@@ -62,15 +69,21 @@ export function ProductsSection() {
         )}
         <FormGrid>
           <Label>
-            Nome
-            <TextInput value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            {labels.common.name}
+            <TextInput
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
           </Label>
           <Label>
-            SKU
-            <TextInput value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} />
+            {labels.common.sku}
+            <TextInput
+              value={form.sku}
+              onChange={(e) => setForm({ ...form, sku: e.target.value })}
+            />
           </Label>
           <Label>
-            Preço
+            {labels.common.price}
             <TextInput
               type="number"
               min={0}
@@ -80,7 +93,7 @@ export function ProductsSection() {
             />
           </Label>
           <Label>
-            Estoque
+            {labels.common.stock}
             <TextInput
               type="number"
               min={0}
@@ -89,14 +102,14 @@ export function ProductsSection() {
             />
           </Label>
           <Label>
-            Fornecedor
+            {labels.common.supplier}
             <SelectInput
               value={form.supplierId ?? ""}
               onChange={(e) =>
                 setForm({ ...form, supplierId: e.target.value ? e.target.value : null })
               }
             >
-              <option value="">Nenhum</option>
+              <option value="">{labels.common.noneSupplier}</option>
               {suppliers.data?.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.name}
@@ -109,24 +122,24 @@ export function ProductsSection() {
             disabled={!form.name || !form.sku || createMut.isPending}
             onClick={() => createMut.mutate()}
           >
-            Adicionar
+            {labels.common.add}
           </SmallButton>
         </FormGrid>
       </Panel>
 
       <Panel>
-        <PanelTitle>Lista</PanelTitle>
-        {products.isLoading && <PageSubtitle>Carregando…</PageSubtitle>}
+        <PanelTitle>{labels.common.list}</PanelTitle>
+        {products.isLoading && <PageSubtitle>{labels.common.loading}</PageSubtitle>}
         {products.isError && <ErrorBanner>{(products.error as Error).message}</ErrorBanner>}
         <TableWrap>
           <Table>
             <thead>
               <tr>
-                <Th>Nome</Th>
-                <Th>SKU</Th>
-                <Th>Preço</Th>
-                <Th>Estoque</Th>
-                <Th>Fornecedor</Th>
+                <Th>{labels.common.name}</Th>
+                <Th>{labels.common.sku}</Th>
+                <Th>{labels.common.price}</Th>
+                <Th>{labels.common.stock}</Th>
+                <Th>{labels.common.supplier}</Th>
                 <Th />
               </tr>
             </thead>
@@ -135,12 +148,12 @@ export function ProductsSection() {
                 <tr key={p.id}>
                   <Td>{p.name}</Td>
                   <Td>{p.sku}</Td>
-                  <Td>R$ {Number(p.price).toFixed(2)}</Td>
+                  <Td>{formatBRL(p.price)}</Td>
                   <Td>{p.stock}</Td>
-                  <Td>{p.supplier?.name ?? "—"}</Td>
+                  <Td>{p.supplier?.name ?? labels.common.emDash}</Td>
                   <Td style={{ textAlign: "right" }}>
                     <DangerButton type="button" onClick={() => deleteMut.mutate(p.id)}>
-                      Excluir
+                      {labels.common.delete}
                     </DangerButton>
                   </Td>
                 </tr>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { registerRequest } from "../api/auth-api";
+import { labels } from "@/constants";
 import {
   AuthShell,
   AuthCard,
@@ -30,31 +31,35 @@ export function RegisterForm() {
   return (
     <AuthShell>
       <AuthCard>
-        <AuthTitle>Criar conta</AuthTitle>
-        <AuthSubtitle>Preencha os dados para cadastrar um novo usuário.</AuthSubtitle>
+        <AuthTitle>{labels.auth.registerTitle}</AuthTitle>
+        <AuthSubtitle>{labels.auth.registerSubtitle}</AuthSubtitle>
         {mutation.isError && <ErrorText>{(mutation.error as Error).message}</ErrorText>}
         <Field>
-          Nome
-          <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Nome completo" />
+          {labels.common.name}
+          <Input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder={labels.auth.placeholderName}
+          />
         </Field>
         <Field>
-          E-mail
+          {labels.common.email}
           <Input
             type="email"
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="voce@empresa.com"
+            placeholder={labels.auth.placeholderEmail}
           />
         </Field>
         <Field>
-          Senha
+          {labels.common.password}
           <Input
             type="password"
             autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Mínimo 6 caracteres"
+            placeholder={labels.auth.placeholderPasswordMin}
           />
         </Field>
         <PrimaryButton
@@ -62,10 +67,10 @@ export function RegisterForm() {
           disabled={mutation.isPending}
           onClick={() => mutation.mutate()}
         >
-          {mutation.isPending ? "Criando…" : "Cadastrar"}
+          {mutation.isPending ? labels.auth.creating : labels.auth.registerSubmit}
         </PrimaryButton>
         <GhostButton type="button" onClick={() => router.push("/login")}>
-          Já tenho conta
+          {labels.auth.hasAccount}
         </GhostButton>
       </AuthCard>
     </AuthShell>

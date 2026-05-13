@@ -1,5 +1,6 @@
 "use client";
 
+import { labels } from "@/constants";
 import styled from "styled-components";
 
 const Hero = styled.div`
@@ -20,11 +21,8 @@ const Lead = styled.p`
 export default function DashboardPage() {
   return (
     <Hero>
-      <Title>Bem-vindo ao ERP</Title>
-      <Lead>
-        Use o menu lateral para acessar fornecedores, produtos, colaboradores, financeiro e serviços.
-        Todas as operações são protegidas por autenticação e persistidas no PostgreSQL.
-      </Lead>
+      <Title>{labels.dashboard.welcomeTitle}</Title>
+      <Lead>{labels.dashboard.welcomeLead}</Lead>
     </Hero>
   );
 }

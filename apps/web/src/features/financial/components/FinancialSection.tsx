@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { labels } from "@/constants";
 import {
   createFinancialEntry,
   deleteFinancialEntry,
@@ -60,11 +61,11 @@ export function FinancialSection() {
 
   return (
     <div>
-      <PageTitle>Financeiro</PageTitle>
-      <PageSubtitle>Lançamentos de receitas e despesas.</PageSubtitle>
+      <PageTitle>{labels.financial.pageTitle}</PageTitle>
+      <PageSubtitle>{labels.financial.pageSubtitle}</PageSubtitle>
 
       <Panel>
-        <PanelTitle>Novo lançamento</PanelTitle>
+        <PanelTitle>{labels.financial.newPanel}</PanelTitle>
         {(createMut.isError || deleteMut.isError) && (
           <ErrorBanner>
             {(createMut.error as Error)?.message ?? (deleteMut.error as Error)?.message}
@@ -72,17 +73,17 @@ export function FinancialSection() {
         )}
         <FormGrid>
           <Label>
-            Tipo
+            {labels.common.type}
             <SelectInput
               value={form.type}
               onChange={(e) => setForm({ ...form, type: e.target.value as FinancialEntryType })}
             >
-              <option value="INCOME">Receita</option>
-              <option value="EXPENSE">Despesa</option>
+              <option value="INCOME">{labels.financial.income}</option>
+              <option value="EXPENSE">{labels.financial.expense}</option>
             </SelectInput>
           </Label>
           <Label>
-            Valor
+            {labels.common.value}
             <TextInput
               type="number"
               min={0}
@@ -92,14 +93,14 @@ export function FinancialSection() {
             />
           </Label>
           <Label>
-            Descrição
+            {labels.common.description}
             <TextInput
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
           </Label>
           <Label>
-            Categoria
+            {labels.common.category}
             <TextInput
               value={form.category ?? ""}
               onChange={(e) => setForm({ ...form, category: e.target.value })}
@@ -110,24 +111,24 @@ export function FinancialSection() {
             disabled={!form.description || form.amount <= 0 || createMut.isPending}
             onClick={() => createMut.mutate()}
           >
-            Registrar
+            {labels.common.registerAction}
           </SmallButton>
         </FormGrid>
       </Panel>
 
       <Panel>
-        <PanelTitle>Histórico</PanelTitle>
-        {list.isLoading && <PageSubtitle>Carregando…</PageSubtitle>}
+        <PanelTitle>{labels.financial.historyPanel}</PanelTitle>
+        {list.isLoading && <PageSubtitle>{labels.common.loading}</PageSubtitle>}
         {list.isError && <ErrorBanner>{(list.error as Error).message}</ErrorBanner>}
         <TableWrap>
           <Table>
             <thead>
               <tr>
-                <Th>Data</Th>
-                <Th>Tipo</Th>
-                <Th>Valor</Th>
-                <Th>Descrição</Th>
-                <Th>Categoria</Th>
+                <Th>{labels.common.date}</Th>
+                <Th>{labels.common.type}</Th>
+                <Th>{labels.common.value}</Th>
+                <Th>{labels.common.description}</Th>
+                <Th>{labels.common.category}</Th>
                 <Th />
               </tr>
             </thead>
@@ -135,13 +136,15 @@ export function FinancialSection() {
               {list.data?.map((row) => (
                 <tr key={row.id}>
                   <Td>{new Date(row.occurredAt).toLocaleString("pt-BR")}</Td>
-                  <Td>{row.type === "INCOME" ? "Receita" : "Despesa"}</Td>
+                  <Td>
+                    {row.type === "INCOME" ? labels.financial.income : labels.financial.expense}
+                  </Td>
                   <Td>{formatBRL(row.amount)}</Td>
                   <Td>{row.description}</Td>
-                  <Td>{row.category ?? "—"}</Td>
+                  <Td>{row.category ?? labels.common.emDash}</Td>
                   <Td style={{ textAlign: "right" }}>
                     <DangerButton type="button" onClick={() => deleteMut.mutate(row.id)}>
-                      Excluir
+                      {labels.common.delete}
                     </DangerButton>
                   </Td>
                 </tr>

@@ -7,7 +7,8 @@ export const AuthShell = styled.div`
   display: grid;
   place-items: center;
   padding: 24px;
-  background: radial-gradient(circle at 20% 20%, #1e3a5f33, transparent 40%),
+  background:
+    radial-gradient(circle at 20% 20%, #1e3a5f33, transparent 40%),
     radial-gradient(circle at 80% 0%, #3b82f633, transparent 35%), ${(p) => p.theme.colors.bg};
 `;
 

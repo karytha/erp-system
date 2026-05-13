@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import { labels } from "@/constants";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "ERP Console",
-  description: "Sistema ERP com Next.js e Node.js",
+  title: labels.app.title,
+  description: labels.app.description,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

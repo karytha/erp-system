@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createService, deleteService, fetchServices, type ServiceInput } from "../api/services-api";
+import { labels } from "@/constants";
+import {
+  createService,
+  deleteService,
+  fetchServices,
+  type ServiceInput,
+} from "../api/services-api";
 import { formatBRL } from "@/lib/format";
 import {
   PageTitle,
@@ -53,11 +59,11 @@ export function ServicesSection() {
 
   return (
     <div>
-      <PageTitle>Serviços</PageTitle>
-      <PageSubtitle>Serviços comercializados pela empresa.</PageSubtitle>
+      <PageTitle>{labels.services.pageTitle}</PageTitle>
+      <PageSubtitle>{labels.services.pageSubtitle}</PageSubtitle>
 
       <Panel>
-        <PanelTitle>Novo serviço</PanelTitle>
+        <PanelTitle>{labels.services.newPanel}</PanelTitle>
         {(createMut.isError || deleteMut.isError) && (
           <ErrorBanner>
             {(createMut.error as Error)?.message ?? (deleteMut.error as Error)?.message}
@@ -65,18 +71,21 @@ export function ServicesSection() {
         )}
         <FormGrid>
           <Label>
-            Nome
-            <TextInput value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            {labels.common.name}
+            <TextInput
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
           </Label>
           <Label>
-            Descrição
+            {labels.common.description}
             <TextInput
               value={form.description ?? ""}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
           </Label>
           <Label>
-            Preço
+            {labels.common.price}
             <TextInput
               type="number"
               min={0}
@@ -86,7 +95,7 @@ export function ServicesSection() {
             />
           </Label>
           <Label>
-            Duração (min)
+            {labels.common.durationMinutesField}
             <TextInput
               type="number"
               min={0}
@@ -104,23 +113,23 @@ export function ServicesSection() {
             disabled={!form.name || createMut.isPending}
             onClick={() => createMut.mutate()}
           >
-            Adicionar
+            {labels.common.add}
           </SmallButton>
         </FormGrid>
       </Panel>
 
       <Panel>
-        <PanelTitle>Lista</PanelTitle>
-        {list.isLoading && <PageSubtitle>Carregando…</PageSubtitle>}
+        <PanelTitle>{labels.common.list}</PanelTitle>
+        {list.isLoading && <PageSubtitle>{labels.common.loading}</PageSubtitle>}
         {list.isError && <ErrorBanner>{(list.error as Error).message}</ErrorBanner>}
         <TableWrap>
           <Table>
             <thead>
               <tr>
-                <Th>Nome</Th>
-                <Th>Descrição</Th>
-                <Th>Preço</Th>
-                <Th>Duração</Th>
+                <Th>{labels.common.name}</Th>
+                <Th>{labels.common.description}</Th>
+                <Th>{labels.common.price}</Th>
+                <Th>{labels.common.duration}</Th>
                 <Th />
               </tr>
             </thead>
@@ -128,12 +137,16 @@ export function ServicesSection() {
               {list.data?.map((s) => (
                 <tr key={s.id}>
                   <Td>{s.name}</Td>
-                  <Td>{s.description ?? "—"}</Td>
+                  <Td>{s.description ?? labels.common.emDash}</Td>
                   <Td>{formatBRL(s.price)}</Td>
-                  <Td>{s.durationMinutes ? `${s.durationMinutes} min` : "—"}</Td>
+                  <Td>
+                    {s.durationMinutes
+                      ? `${s.durationMinutes} ${labels.common.minutesSuffix}`
+                      : labels.common.emDash}
+                  </Td>
                   <Td style={{ textAlign: "right" }}>
                     <DangerButton type="button" onClick={() => deleteMut.mutate(s.id)}>
-                      Excluir
+                      {labels.common.delete}
                     </DangerButton>
                   </Td>
                 </tr>

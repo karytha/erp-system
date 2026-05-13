@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createEmployee, deleteEmployee, fetchEmployees, type EmployeeInput } from "../api/employees-api";
+import {
+  createEmployee,
+  deleteEmployee,
+  fetchEmployees,
+  type EmployeeInput,
+} from "../api/employees-api";
+import { labels } from "@/constants";
 import {
   PageTitle,
   PageSubtitle,
@@ -52,11 +58,11 @@ export function EmployeesSection() {
 
   return (
     <div>
-      <PageTitle>Colaboradores</PageTitle>
-      <PageSubtitle>Cadastro de equipe interna.</PageSubtitle>
+      <PageTitle>{labels.employees.pageTitle}</PageTitle>
+      <PageSubtitle>{labels.employees.pageSubtitle}</PageSubtitle>
 
       <Panel>
-        <PanelTitle>Novo colaborador</PanelTitle>
+        <PanelTitle>{labels.employees.newPanel}</PanelTitle>
         {(createMut.isError || deleteMut.isError) && (
           <ErrorBanner>
             {(createMut.error as Error)?.message ?? (deleteMut.error as Error)?.message}
@@ -64,11 +70,14 @@ export function EmployeesSection() {
         )}
         <FormGrid>
           <Label>
-            Nome
-            <TextInput value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            {labels.common.name}
+            <TextInput
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
           </Label>
           <Label>
-            E-mail
+            {labels.common.email}
             <TextInput
               type="email"
               value={form.email}
@@ -76,11 +85,14 @@ export function EmployeesSection() {
             />
           </Label>
           <Label>
-            Cargo
-            <TextInput value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} />
+            {labels.common.role}
+            <TextInput
+              value={form.role}
+              onChange={(e) => setForm({ ...form, role: e.target.value })}
+            />
           </Label>
           <Label>
-            Departamento
+            {labels.common.department}
             <TextInput
               value={form.department ?? ""}
               onChange={(e) => setForm({ ...form, department: e.target.value })}
@@ -91,23 +103,23 @@ export function EmployeesSection() {
             disabled={!form.name || !form.email || !form.role || createMut.isPending}
             onClick={() => createMut.mutate()}
           >
-            Adicionar
+            {labels.common.add}
           </SmallButton>
         </FormGrid>
       </Panel>
 
       <Panel>
-        <PanelTitle>Lista</PanelTitle>
-        {list.isLoading && <PageSubtitle>Carregando…</PageSubtitle>}
+        <PanelTitle>{labels.common.list}</PanelTitle>
+        {list.isLoading && <PageSubtitle>{labels.common.loading}</PageSubtitle>}
         {list.isError && <ErrorBanner>{(list.error as Error).message}</ErrorBanner>}
         <TableWrap>
           <Table>
             <thead>
               <tr>
-                <Th>Nome</Th>
-                <Th>E-mail</Th>
-                <Th>Cargo</Th>
-                <Th>Departamento</Th>
+                <Th>{labels.common.name}</Th>
+                <Th>{labels.common.email}</Th>
+                <Th>{labels.common.role}</Th>
+                <Th>{labels.common.department}</Th>
                 <Th />
               </tr>
             </thead>
@@ -117,10 +129,10 @@ export function EmployeesSection() {
                   <Td>{e.name}</Td>
                   <Td>{e.email}</Td>
                   <Td>{e.role}</Td>
-                  <Td>{e.department ?? "—"}</Td>
+                  <Td>{e.department ?? labels.common.emDash}</Td>
                   <Td style={{ textAlign: "right" }}>
                     <DangerButton type="button" onClick={() => deleteMut.mutate(e.id)}>
-                      Excluir
+                      {labels.common.delete}
                     </DangerButton>
                   </Td>
                 </tr>

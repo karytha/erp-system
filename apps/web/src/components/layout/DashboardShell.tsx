@@ -3,6 +3,7 @@
 import styled from "styled-components";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { labels } from "@/constants";
 import { logout } from "@/features/auth/api/auth-api";
 
 const Shell = styled.div`
@@ -65,12 +66,12 @@ const LogoutBtn = styled.button`
 `;
 
 const links = [
-  { href: "/dashboard", label: "Início" },
-  { href: "/suppliers", label: "Fornecedores" },
-  { href: "/products", label: "Produtos" },
-  { href: "/employees", label: "Colaboradores" },
-  { href: "/financial", label: "Financeiro" },
-  { href: "/services", label: "Serviços" },
+  { href: "/dashboard", label: labels.nav.home },
+  { href: "/suppliers", label: labels.nav.suppliers },
+  { href: "/products", label: labels.nav.products },
+  { href: "/employees", label: labels.nav.employees },
+  { href: "/financial", label: labels.nav.financial },
+  { href: "/services", label: labels.nav.services },
 ];
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
@@ -80,7 +81,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   return (
     <Shell>
       <Aside>
-        <Brand>ERP Console</Brand>
+        <Brand>{labels.app.brand}</Brand>
         {links.map((l) => (
           <NavItem key={l.href} href={l.href} $active={pathname === l.href}>
             {l.label}
@@ -94,7 +95,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               router.replace("/login");
             }}
           >
-            Sair
+            {labels.nav.logout}
           </LogoutBtn>
         </FooterNav>
       </Aside>

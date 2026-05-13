@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { loginRequest } from "../api/auth-api";
+import { labels } from "@/constants";
 import {
   AuthShell,
   AuthCard,
@@ -29,27 +30,27 @@ export function LoginForm() {
   return (
     <AuthShell>
       <AuthCard>
-        <AuthTitle>Entrar no ERP</AuthTitle>
-        <AuthSubtitle>Use seu e-mail e senha para acessar o sistema.</AuthSubtitle>
+        <AuthTitle>{labels.auth.loginTitle}</AuthTitle>
+        <AuthSubtitle>{labels.auth.loginSubtitle}</AuthSubtitle>
         {mutation.isError && <ErrorText>{(mutation.error as Error).message}</ErrorText>}
         <Field>
-          E-mail
+          {labels.common.email}
           <Input
             type="email"
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="voce@empresa.com"
+            placeholder={labels.auth.placeholderEmail}
           />
         </Field>
         <Field>
-          Senha
+          {labels.common.password}
           <Input
             type="password"
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
+            placeholder={labels.auth.placeholderPasswordMask}
           />
         </Field>
         <PrimaryButton
@@ -57,10 +58,10 @@ export function LoginForm() {
           disabled={mutation.isPending}
           onClick={() => mutation.mutate()}
         >
-          {mutation.isPending ? "Entrando…" : "Entrar"}
+          {mutation.isPending ? labels.auth.loggingIn : labels.auth.loginSubmit}
         </PrimaryButton>
         <GhostButton type="button" onClick={() => router.push("/register")}>
-          Criar usuário
+          {labels.auth.createUser}
         </GhostButton>
       </AuthCard>
     </AuthShell>

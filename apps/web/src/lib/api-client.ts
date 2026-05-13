@@ -1,3 +1,5 @@
+import { labels } from "@/constants";
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
 export const AUTH_TOKEN_KEY = "erp_token";
@@ -21,19 +23,43 @@ export async function apiFetch<T>(path: string, options: ApiOptions = {}): Promi
   if (!headers.has("Content-Type") && init.body) {
     headers.set("Content-Type", "application/json");
   }
-  const authToken = skipAuth ? null : token ?? getStoredToken();
+  const authToken = skipAuth ? null : (token ?? getStoredToken());
   if (authToken) {
     headers.set("Authorization", `Bearer ${authToken}`);
   }
-  const res = await fetch(`${API_BASE}${path}`, { ...init, headers });
+
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}${path}`, { ...init, headers });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    const looksLikeNetwork =
+      err instanceof TypeError ||
+      /failed to fetch|networkerror|network request failed|load failed/i.test(msg);
+    if (looksLikeNetwork) {
+      throw new Error(labels.apiErrors.networkFailure(API_BASE));
+    }
+    throw err;
+  }
+
   if (res.status === 204) {
     return undefined as T;
   }
   const text = await res.text();
-  const data = text ? JSON.parse(text) : null;
+  let data: unknown = null;
+  if (text) {
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error(labels.apiErrors.invalidJsonResponse(API_BASE, res.status));
+    }
+  }
   if (!res.ok) {
-    const message = data?.message ?? `Erro ${res.status}`;
-    throw new Error(message);
+    const msg =
+      data && typeof data === "object" && data !== null && "message" in data
+        ? String((data as { message: unknown }).message)
+        : labels.apiErrors.httpStatus(res.status);
+    throw new Error(msg);
   }
   return data as T;
 }
